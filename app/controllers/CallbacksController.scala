@@ -24,4 +24,10 @@ class CallbacksController @Inject() (config: Configuration) extends Controller {
       case None => Unauthorized
     }
   }
+
+  def receiveMessage = Action { implicit request =>
+    play.Logger.info(s"Request body: ${request.body}")
+    play.Logger.info(s"Request body: ${request.body.asJson}")
+    Ok("Be very welcome.")
+  }
 }

@@ -50,7 +50,7 @@ class RedditClient @Inject() (
       .getOrElse {
         val result = ws.url(tokenUrl)
           .withHeaders(AUTHORIZATION -> s"Basic $base64Auth")
-          .withRequestFilter(play.api.libs.ws.ahc.AhcCurlRequestLogger())
+          // .withRequestFilter(play.api.libs.ws.ahc.AhcCurlRequestLogger())
           .post(Map("grant_type" -> Seq("client_credentials")))
           .map(response => response.json.as[Token])
         result.onSuccess {
@@ -66,7 +66,7 @@ class RedditClient @Inject() (
         AUTHORIZATION -> s"Bearer ${token.accessToken}",
         USER_AGENT -> userAgent
       )
-      .withRequestFilter(play.api.libs.ws.ahc.AhcCurlRequestLogger())
+      // .withRequestFilter(play.api.libs.ws.ahc.AhcCurlRequestLogger())
       .get()
       .map(response => response.json.transform((__ \ 'data \ 'children).json.pick).get)
       .map(json => json.as[Seq[RedditPost]])

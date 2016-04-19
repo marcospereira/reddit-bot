@@ -37,5 +37,25 @@ Before continuing, you need to set the suggested value to your Heroku Reddit Bot
 heroku config:set LETS_ENCRYPT_VALUE="<some-bigger-key-here>"
 ```
 
-Where `<some-bigger-key-here>` is the value printed by `letsencrpyt-auto` command. Your app will then restart and you can continue.
+Where `<some-bigger-key-here>` is the value printed by `letsencrpyt-auto` command. Your app will then restart and you can continue:
 
+
+```bash
+heroku addons:create ssl:endpoint
+sudo heroku certs:add /etc/letsencrypt/live/<your-app-name>.herokuapp.com/cert.pem /etc/letsencrypt/live/<your-app-name>.herokuapp.com/privkey.pem
+```
+
+If successful, Heroku will reply with something like:
+
+```
+Resolving trust chain... done
+Adding SSL Endpoint to the-reddit-bot... done
+the-reddit-bot now served by kagawa-95924.herokussl.com
+Certificate details:
+Common Name(s): the-reddit-bot.herokuapp.com
+Expires At:     2016-07-18 19:59 UTC
+Issuer:         /C=US/O=Let's Encrypt/CN=Let's Encrypt Authority X3
+Starts At:      2016-04-19 19:59 UTC
+Subject:        /CN=the-reddit-bot.herokuapp.com
+SSL certificate is verified by a root authority.
+```

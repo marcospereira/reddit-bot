@@ -1,8 +1,10 @@
-GET     /:subreddit/hot                    controllers.RedditController.hot(subreddit: String, limit: Option[Int])
-GET     /:subreddit/top                    controllers.RedditController.top(subreddit: String, limit: Option[Int])
-GET     /:subreddit/new                    controllers.RedditController.newest(subreddit: String, limit: Option[Int])
-GET     /:subreddit/controversial          controllers.RedditController.controversial(subreddit: String, limit: Option[Int])
+GET     /:subreddit/hot                     controllers.RedditController.hot(subreddit: String, limit: Option[Int])
+GET     /:subreddit/top                     controllers.RedditController.top(subreddit: String, limit: Option[Int])
+GET     /:subreddit/new                     controllers.RedditController.newest(subreddit: String, limit: Option[Int])
+GET     /:subreddit/controversial           controllers.RedditController.controversial(subreddit: String, limit: Option[Int])
 
-GET     /healthcheck                       controllers.HealthController.index
+GET     /healthcheck                        controllers.HealthController.index
 
-GET     /.well-known/acme-challenge/:key   controllers.LetsEncryptController.index(key: String)
+# Callbacks
+GET     /.well-known/acme-challenge/:key    controllers.CallbacksController.letsEncrypt(key: String)
+GET     /facebook/callback                  controllers.CallbacksController.verifyApp

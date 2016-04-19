@@ -1,0 +1,4 @@
+GET     /:subreddit/hot                    controllers.RedditController.hot(subreddit: String, limit: Option[Int])
+GET     /:subreddit/top                    controllers.RedditController.top(subreddit: String, limit: Option[Int])
+GET     /:subreddit/new                    controllers.RedditController.newest(subreddit: String, limit: Option[Int])
+GET     /:subreddit/random                 controllers.RedditController.random(subreddit: String, limit: Option[Int])

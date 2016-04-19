@@ -31,8 +31,8 @@ class RedditController @Inject() (redditService: RedditService)(implicit exec: E
     }
   }
 
-  def random(subreddit: String, limit: Option[Int]) = Action.async {
-    redditService.random(subreddit, limit) map { posts =>
+  def controversial(subreddit: String, limit: Option[Int]) = Action.async {
+    redditService.controversial(subreddit, limit) map { posts =>
       Ok(Json.toJson(posts)).as("application/json; charset=utf-8")
     }
   }

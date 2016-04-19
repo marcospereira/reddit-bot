@@ -85,7 +85,7 @@ class RedditService @Inject() (client: RedditClient, @NamedCache("reddit-cache")
   def top(subreddit: String, limit: Option[Int] = Some(25)): Future[Seq[RedditPost]] =
     getSubreddit(subreddit, "top", limit)
 
-  def random(subreddit: String, limit: Option[Int] = Some(25)): Future[Seq[RedditPost]] =
+  def controversial(subreddit: String, limit: Option[Int] = Some(25)): Future[Seq[RedditPost]] =
     getSubreddit(subreddit, "random", limit)
 
   private def getSubreddit(subreddit: String, order: String, limit: Option[Int]): Future[Seq[RedditPost]] = {

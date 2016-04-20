@@ -14,25 +14,25 @@ import models.RedditPost._
 class RedditController @Inject() (redditService: RedditService)(implicit exec: ExecutionContext) extends Controller {
 
   def hot(subreddit: String, limit: Option[Int]) = Action.async {
-    redditService.hot(subreddit, limit) map { posts =>
+    redditService.getSubreddit(subreddit, "hot", limit) map { posts =>
       Ok(Json.toJson(posts)).as("application/json; charset=utf-8")
     }
   }
 
   def newest(subreddit: String, limit: Option[Int]) = Action.async {
-    redditService.newest(subreddit, limit) map { posts =>
+    redditService.getSubreddit(subreddit, "new", limit) map { posts =>
       Ok(Json.toJson(posts)).as("application/json; charset=utf-8")
     }
   }
 
   def top(subreddit: String, limit: Option[Int]) = Action.async {
-    redditService.top(subreddit, limit) map { posts =>
+    redditService.getSubreddit(subreddit, "top", limit) map { posts =>
       Ok(Json.toJson(posts)).as("application/json; charset=utf-8")
     }
   }
 
   def controversial(subreddit: String, limit: Option[Int]) = Action.async {
-    redditService.controversial(subreddit, limit) map { posts =>
+    redditService.getSubreddit(subreddit, "controversial", limit) map { posts =>
       Ok(Json.toJson(posts)).as("application/json; charset=utf-8")
     }
   }

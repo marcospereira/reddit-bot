@@ -25,7 +25,8 @@ object Attachment {
         subtitle = s"From ${post.getAuthor} | ${post.getCommentCount} comments | ${post.getUpVotes} ups | ${post.getDownVotes} downs",
         image_url = Option(if (post.getSource != null) post.getSource.getUrl else post.getThumbnail),
         buttons = Seq(
-          Button(title = "Open link", url = post.getURL)
+          Button(title = "Open link", url = post.getURL),
+          Button(title = "Reddit conversation", url = "https://www.reddit.com" + post.getPermalink)
         )
       )
     }

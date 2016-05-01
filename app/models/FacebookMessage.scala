@@ -63,7 +63,7 @@ object Messages {
       | 2. /subreddit/order where order is "hot" or "top"
       |
       | Some examples:
-      | 1. /foot/hot
+      | 1. /food/hot
       | 2. /science/top
     """.stripMargin))
 }

@@ -54,13 +54,13 @@ object Messages {
   implicit val payloadFormat = Json.format[Payload]
   implicit val attachmentFormat = Json.format[Attachment]
 
-  lazy val commandFormat = "/?([a-zA-Z0-9_]+)/(hot|top)".r
+  lazy val commandFormat = "/?([a-zA-Z0-9_]+)/(hot|top|new|controversial|rising)".r
 
   def help(sender: User) = BotHelpResponse(sender, message = Message(text =
     """
       | I'm a robot. You need to be very specific with me. Here is what you can say:
       | 1. help
-      | 2. /subreddit/order where order is "hot" or "top"
+      | 2. /subreddit/order where order is "hot", "top", "new", "controversial" or "rising".
       |
       | Some examples:
       | 1. /food/hot

@@ -23,7 +23,7 @@ object Attachment {
       Card(
         title = post.getTitle,
         subtitle = s"From ${post.getAuthor} | ${post.getCommentCount} comments | ${post.getUpVotes} ups | ${post.getDownVotes} downs",
-        image_url = if (post.getSource != null) Some(post.getSource.getUrl) else None,
+        image_url = (if (post.getSource != null) Some(post.getSource.getUrl) else None).map(_.replaceAll("amp;", "")),
         buttons = buttons(post)
       )
     }

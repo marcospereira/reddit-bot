@@ -54,7 +54,7 @@ object Messages {
   implicit val payloadFormat = Json.format[Payload]
   implicit val attachmentFormat = Json.format[Attachment]
 
-  lazy val commandFormat = "/?([a-zA-Z]+)/(hot|top)".r
+  lazy val commandFormat = "/?([a-zA-Z0-9_]+)/(hot|top)".r
 
   def help(sender: User) = BotHelpResponse(sender, message = Message(text =
     """

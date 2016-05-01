@@ -19,7 +19,7 @@ case class Attachment(`type`: String = "template", payload: Payload)
 
 object Attachment {
   def from(posts: Seq[Submission]): Attachment = {
-    val cards = posts.map { post =>
+    val cards = posts.take(10).map { post =>
       Card(
         title = post.getTitle,
         subtitle = s"From ${post.getAuthor} | ${post.getCommentCount} comments | ${post.getUpVotes} ups | ${post.getDownVotes} downs",

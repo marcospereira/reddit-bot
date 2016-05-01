@@ -46,11 +46,12 @@ class MessengerController @Inject() (
           case _ => Future(Json.toJson(Messages.help(sender)))
         }
       }
-    Future.sequence(futures.map(postBack)).map(responses => Ok("Finished"))
+      .map(postBack)
+    Future.sequence(futures).map(responses => Ok("Finished"))
   }
 
   private def redditPosts(subreddit: String, order: String, sender: User): Future[JsValue] = {
-    redditService.getSubreddit(subreddit, order, Some(3)).map {
+    redditService.getSubreddit(subreddit, order, Some(12)).map {
       posts =>
         Json.obj(
           "recipient" -> Json.toJson(sender),

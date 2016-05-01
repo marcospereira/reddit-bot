@@ -14,4 +14,5 @@ server.pid
 *.eml
 /dist/
 .cache
-env.sh
+env.local.sh
+env.heroku.sh

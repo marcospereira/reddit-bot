@@ -2,6 +2,10 @@
 
 This is a reddit bot for Facebook Messenger. It enables you to list news from your favorite subreddit.
 
+It uses [Reddit API](https://www.reddit.com/dev/api) and Facebook's [Messenger Platform](https://developers.facebook.com/docs/messenger-platform) to create a simple bot that list submissions in a subreddit.
+
+> Keep in mind that this is just an experiment to play with Messenger Platform.
+
 ## Let's Encrypt and Heroku
 
 Facebook requires that your callback URLs uses HTTPS. Fortunately, [Let's Encrypt](https://letsencrypt.org/) exists and you can use them, instead of suffering all the pain involved in turn on and manage HTTPS.

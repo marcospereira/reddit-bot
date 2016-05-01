@@ -15,7 +15,11 @@ import services.RedditService
 import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
-class MessengerController @Inject() (ws: WSClient, config: Configuration, redditService: RedditService)(implicit executionContext: ExecutionContext) extends Controller {
+class MessengerController @Inject() (
+    ws: WSClient,
+    config: Configuration,
+    redditService: RedditService
+)(implicit executionContext: ExecutionContext) extends Controller {
 
   def verifyApp = Action { implicit request =>
     val expectedToken = config
@@ -30,8 +34,7 @@ class MessengerController @Inject() (ws: WSClient, config: Configuration, reddit
   }
 
   def receiveMessage = Action.async(parse.json) { request =>
-    val messageRequest = request.body.as[PostedMessage]
-    val futures: Seq[Future[JsValue]] = messageRequest.entry
+    val futures = request.body.as[PostedMessage].entry
       .flatMap(_.messaging)
       .filter(_.message.isDefined)
       .map(messaging => messaging.sender -> messaging.message.get)

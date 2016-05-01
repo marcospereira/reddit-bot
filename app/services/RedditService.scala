@@ -40,6 +40,7 @@ class RedditService @Inject() (
           USER_AGENT -> userAgent
         )
         .withRequestFilter(play.api.libs.ws.ahc.AhcCurlRequestLogger()) // TODO remove
+        .withRequestFilter(AhcResponseHeadersLogger()) // TODO remove
         .get()
         .map(response => redditParser.parse(response.body))
     }

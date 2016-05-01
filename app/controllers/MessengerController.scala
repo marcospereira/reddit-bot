@@ -10,7 +10,7 @@ import play.api.libs.json._
 import play.api.libs.ws.{ WSClient, WSResponse }
 import play.api.libs.ws.ahc.AhcCurlRequestLogger
 import play.api.mvc.{ Action, Controller }
-import services.RedditService
+import services.{ AhcResponseHeadersLogger, RedditService }
 
 import scala.concurrent.{ ExecutionContext, Future }
 
@@ -68,6 +68,7 @@ class MessengerController @Inject() (
         .withQueryString("access_token" -> config.getString("facebook.messages.token").getOrElse(""))
         .withHeaders(CONTENT_TYPE -> ContentTypes.JSON)
         .withRequestFilter(AhcCurlRequestLogger())
+        .withRequestFilter(AhcResponseHeadersLogger())
         .post(response)
     }
   }

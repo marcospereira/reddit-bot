@@ -2,8 +2,8 @@ package services
 
 import javax.inject.{ Inject, Singleton }
 
-import models.Token._
-import models._
+import com.github.jreddit.parser.entity.Submission
+import com.github.jreddit.parser.listing.SubmissionsListingParser
 import play.api.Configuration
 import play.api.cache.{ CacheApi, NamedCache }
 import play.api.http.HeaderNames._
@@ -14,11 +14,14 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration._
 
+import scala.collection.JavaConversions._
+
 @Singleton
 class RedditService @Inject() (
     ws: WSClient,
     config: Configuration,
     oAuthService: OAuthService,
+    redditParser: SubmissionsListingParser,
     @NamedCache("reddit-cache") redditCache: CacheApi
 ) {
 
@@ -29,7 +32,7 @@ class RedditService @Inject() (
     config.getString(key).getOrElse(sys.error(s"Configuration $key was not found"))
   }
 
-  private def get(resource: String): Future[Seq[RedditPost]] = {
+  private def get(resource: String): Future[Seq[Submission]] = {
     oAuthService.getToken flatMap { token =>
       ws.url(s"$baseUrl/$resource")
         .withHeaders(
@@ -38,14 +41,13 @@ class RedditService @Inject() (
         )
         .withRequestFilter(play.api.libs.ws.ahc.AhcCurlRequestLogger()) // TODO remove
         .get()
-        .map(response => response.json.transform((__ \ 'data \ 'children).json.pick).get)
-        .map(json => json.as[Seq[RedditPost]])
+        .map(response => redditParser.parse(response.body))
     }
   }
 
-  def getSubreddit(subreddit: String, order: String, limit: Option[Int] = None): Future[Seq[RedditPost]] = {
+  def getSubreddit(subreddit: String, order: String, limit: Option[Int] = None): Future[Seq[Submission]] = {
     val resource = s"""r/$subreddit/$order${limit.map("?limit=" + _).getOrElse("")}"""
-    redditCache.get[Seq[RedditPost]](resource) match {
+    redditCache.get[Seq[Submission]](resource) match {
       case Some(posts) =>
         Future(posts)
       case None =>

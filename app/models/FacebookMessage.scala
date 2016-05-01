@@ -1,5 +1,6 @@
 package models
 
+import com.github.jreddit.parser.entity.Submission
 import play.api.libs.json.Json
 
 case class User(id: Long)
@@ -17,14 +18,14 @@ case class Payload(template_type: String = "generic", elements: Seq[Card])
 case class Attachment(`type`: String = "template", payload: Payload)
 
 object Attachment {
-  def from(posts: Seq[RedditPost]): Attachment = {
+  def from(posts: Seq[Submission]): Attachment = {
     val cards = posts.map { post =>
       Card(
-        title = post.title,
-        subtitle = s"From ${post.author} | ${post.numComments} comments | ${post.ups} ups | ${post.downs} downs",
-        image_url = None,
+        title = post.getTitle,
+        subtitle = s"From ${post.getAuthor} | ${post.getCommentCount} comments | ${post.getUpVotes} ups | ${post.getDownVotes} downs",
+        image_url = Option(if (post.getSource != null) post.getSource.getUrl else post.getThumbnail),
         buttons = Seq(
-          Button(title = "Open link", url = post.url)
+          Button(title = "Open link", url = post.getURL)
         )
       )
     }

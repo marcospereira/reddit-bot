@@ -24,13 +24,18 @@ object Attachment {
         title = post.getTitle,
         subtitle = s"From ${post.getAuthor} | ${post.getCommentCount} comments | ${post.getUpVotes} ups | ${post.getDownVotes} downs",
         image_url = Option(if (post.getSource != null) post.getSource.getUrl else post.getThumbnail),
-        buttons = Seq(
-          Button(title = "Open link", url = post.getURL),
-          Button(title = "Reddit conversation", url = "https://www.reddit.com" + post.getPermalink)
-        )
+        buttons = buttons(post)
       )
     }
     Attachment(payload = Payload(elements = cards))
+  }
+
+  private def buttons(post: Submission): Seq[Button] = {
+    val buttons = Seq[Button](Button(title = "Open link", url = post.getURL))
+    if (post.getURL.contains("reddit.com/r/"))
+      buttons
+    else
+      buttons :+ Button(title = "Reddit conversation", url = "https://www.reddit.com" + post.getPermalink)
   }
 }
 

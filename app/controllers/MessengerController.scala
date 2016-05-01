@@ -51,7 +51,7 @@ class MessengerController @Inject() (
   }
 
   private def redditPosts(subreddit: String, order: String, sender: User): Future[JsValue] = {
-    redditService.getSubreddit(subreddit, order, Some(12)).map {
+    redditService.getSubreddit(subreddit, order, Some(10)).map {
       posts =>
         Json.obj(
           "recipient" -> Json.toJson(sender),

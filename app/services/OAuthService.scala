@@ -37,7 +37,7 @@ package services {
           val result = ws.url(tokenUrl)
             .withHeaders(AUTHORIZATION -> s"Basic $base64Auth")
             .withRequestFilter(play.api.libs.ws.ahc.AhcCurlRequestLogger()) // TODO remove
-            .withRequestFilter(AhcResponseHeadersLogger()) // TODO remove
+            .withRequestFilter(AhcResponseLogger()) // TODO remove
             .post(Map("grant_type" -> Seq("client_credentials")))
             .map(response => response.json.as[Token])
           result.onSuccess {

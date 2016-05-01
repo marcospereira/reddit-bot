@@ -2,15 +2,15 @@ package controllers
 
 import javax.inject.{ Inject, Singleton }
 
-import models._
 import models.Messages._
+import models._
 import play.api.Configuration
 import play.api.http.ContentTypes
 import play.api.libs.json._
-import play.api.libs.ws.{ WSClient, WSResponse }
 import play.api.libs.ws.ahc.AhcCurlRequestLogger
+import play.api.libs.ws.{ WSClient, WSResponse }
 import play.api.mvc.{ Action, Controller }
-import services.{ AhcResponseHeadersLogger, RedditService }
+import services.{ AhcResponseLogger, RedditService }
 
 import scala.concurrent.{ ExecutionContext, Future }
 
@@ -68,7 +68,7 @@ class MessengerController @Inject() (
         .withQueryString("access_token" -> config.getString("facebook.messages.token").getOrElse(""))
         .withHeaders(CONTENT_TYPE -> ContentTypes.JSON)
         .withRequestFilter(AhcCurlRequestLogger())
-        .withRequestFilter(AhcResponseHeadersLogger())
+        .withRequestFilter(AhcResponseLogger(body = true))
         .post(response)
     }
   }

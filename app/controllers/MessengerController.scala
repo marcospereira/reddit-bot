@@ -42,7 +42,7 @@ class MessengerController @Inject() (
         val sender = tuple._1
         val message = tuple._2
         message.text match {
-          case Messages.commandFormat(subreddit, order) => redditPosts(subreddit, order, sender)
+          case Messages.commandFormat(subreddit, order) => getRedditPosts(subreddit, order, sender)
           case _ => Future(Json.toJson(Messages.help(sender)))
         }
       }
@@ -50,7 +50,7 @@ class MessengerController @Inject() (
     Future.sequence(futures).map(responses => Ok("Finished"))
   }
 
-  private def redditPosts(subreddit: String, order: String, sender: User): Future[JsValue] = {
+  private def getRedditPosts(subreddit: String, order: String, sender: User): Future[JsValue] = {
     redditService.getSubreddit(subreddit, order, Some(10)).map {
       posts =>
         Json.obj(

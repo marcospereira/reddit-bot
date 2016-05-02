@@ -6,9 +6,25 @@ It uses [Reddit API](https://www.reddit.com/dev/api) and Facebook's [Messenger P
 
 > Keep in mind that this is just an experiment to play with Messenger Platform.
 
+## How it works
+
+First, get familiar with Messenger Platform. The following documentation pages are enough to get context of how the platform works:
+
+1. [Getting started](https://developers.facebook.com/docs/messenger-platform/quickstart)
+2. [Complete guide](https://developers.facebook.com/docs/messenger-platform/implementation)
+
+Then start by reading `controllers.MessengerController.receiveMessage()` action, which [receives a message](https://developers.facebook.com/docs/messenger-platform/implementation#receive_message), parse it to a `models.PostedMessage` and decide how to respond. The response could be either a [simple text message](https://developers.facebook.com/docs/messenger-platform/send-api-reference#request) or a bubble message with cards (see the [button template](https://developers.facebook.com/docs/messenger-platform/send-api-reference#button_template)).
+
+Reddit-bot tries to parse any request message's text with the pattern `/subreddit/order` and then, queries Reddit API to return the submissions according to the requested order. This response is sent as button messages. If the request message's text does not match the pattern, it will just return a help message. This all happens at `controllers.MessengerController.receiveMessage()` action.
+
+## Tips while developing a Messenger Bot
+
+1. Check the responses (including the headers) of requests that you are making to Facebook. Most of the errors are very clear and well documented.
+2. Have a way to reproduce the requests you are making. Play WS offers an [utility](https://www.playframework.com/documentation/2.5.x/ScalaWS#Request-Filters) to log requests as `curl` and you can then change it and test variations faster.
+
 ## Let's Encrypt and Heroku
 
-Facebook requires that your callback URLs uses HTTPS. Fortunately, [Let's Encrypt](https://letsencrypt.org/) exists and you can use them, instead of suffering all the pain involved in turn on and manage HTTPS.
+Facebook requires that your callback URLs uses HTTPS. Fortunately, [Let's Encrypt](https://letsencrypt.org/) exists and you can use it, instead of suffering all the pain involved in turn on and manage HTTPS.
 
 Must reads:
 

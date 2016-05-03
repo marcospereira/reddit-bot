@@ -2,8 +2,8 @@ package controllers
 
 import javax.inject.{ Inject, Singleton }
 
-import models.Messages._
 import models._
+import models.Messages._
 import play.api.Configuration
 import play.api.http.ContentTypes
 import play.api.libs.json._
@@ -34,7 +34,7 @@ class MessengerController @Inject() (
   }
 
   def receiveMessage = Action.async(parse.json) { request =>
-    val futures = request.body.as[PostedMessage].entry
+    val futures = request.body.as[ReceivedMessage].entry
       .flatMap(_.messaging)
       .filter(_.message.isDefined)
       .map(messaging => messaging.sender -> messaging.message.get)
@@ -42,7 +42,7 @@ class MessengerController @Inject() (
         val sender = tuple._1
         val message = tuple._2
         message.text match {
-          case Messages.commandFormat(subreddit, order) => getRedditPosts(subreddit, order, sender)
+          case Messages.commandPattern(subreddit, order) => getRedditPosts(subreddit, order, sender)
           case _ => Future(Json.toJson(Messages.help(sender)))
         }
       }
@@ -53,10 +53,10 @@ class MessengerController @Inject() (
   private def getRedditPosts(subreddit: String, order: String, sender: User): Future[JsValue] = {
     redditService.getSubreddit(subreddit, order, Some(10)).map {
       posts =>
-        Json.obj(
-          "recipient" -> Json.toJson(sender),
-          "message" -> Json.obj(
-            "attachment" -> Json.toJson(Attachment.from(posts))
+        Json.toJson(
+          StructuredMessage(
+            recipient = sender,
+            message = Map("attachment" -> Attachment.from(posts))
           )
         )
     }

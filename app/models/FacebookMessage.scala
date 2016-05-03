@@ -135,6 +135,13 @@ case class Attachment(`type`: String = "template", payload: Payload)
  */
 case class StructuredMessage(recipient: User, message: Map[String, Attachment])
 
+case class Error(
+  message: String,
+  `type`: String,
+  code: Long,
+  fbtrace_id: String
+)
+
 object Attachment {
   def from(posts: Seq[Submission]): Attachment = {
     val cards = posts.take(10).map { post =>
@@ -173,6 +180,8 @@ object Messages {
   implicit val attachmentFormat = Json.format[Attachment]
   implicit val structuredMessageFormat = Json.format[StructuredMessage]
 
+  implicit val errorFormat = Json.format[Error]
+
   lazy val commandPattern = "/?([a-zA-Z0-9_]+)/(hot|top|new|controversial|rising)".r
 
   def help(sender: User) = TextResponse(sender, message = Message(text =
@@ -186,11 +195,13 @@ object Messages {
       | 2. /science/top
     """.stripMargin))
 
-  def oops(sender: User) = TextResponse(sender, message = Message(text =
-    """
-    | You know, robots fails sometimes. Unfortunately I was not able to get
-    | reddit posts. :-(
+  def oops(sender: User, cause: String) = TextResponse(sender, message = Message(text =
+    s"""
+    | You know, robots fails sometimes. Unfortunately I was not able to get reddit posts. :-(
     |
-    | You can try later.
+    | Here is what happen:
+    | $cause
+    |
+    | You can try again later.
   """.stripMargin))
 }

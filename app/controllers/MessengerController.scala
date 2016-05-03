@@ -5,18 +5,15 @@ import javax.inject.{ Inject, Singleton }
 import models._
 import models.Messages._
 import play.api.Configuration
-import play.api.http.ContentTypes
 import play.api.libs.json._
-import play.api.libs.ws.ahc.AhcCurlRequestLogger
-import play.api.libs.ws.{ WSClient, WSResponse }
 import play.api.mvc.{ Action, Controller }
-import services.{ AhcResponseLogger, RedditService }
+import services.{ MessengerService, RedditService }
 
 import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
 class MessengerController @Inject() (
-    ws: WSClient,
+    messengerService: MessengerService,
     config: Configuration,
     redditService: RedditService
 )(implicit executionContext: ExecutionContext) extends Controller {
@@ -46,7 +43,7 @@ class MessengerController @Inject() (
           case _ => Future(Json.toJson(Messages.help(sender)))
         }
       }
-      .map(postBack)
+      .map(messengerService.reply)
     Future.sequence(futures).map(responses => Ok("Finished"))
   }
 
@@ -59,17 +56,6 @@ class MessengerController @Inject() (
             message = Map("attachment" -> Attachment.from(posts))
           )
         )
-    }
-  }
-
-  private def postBack(f: Future[JsValue]): Future[WSResponse] = {
-    f.flatMap { response =>
-      ws.url(config.getString("facebook.messages.url").getOrElse("https://graph.facebook.com/v2.6/me/messages"))
-        .withQueryString("access_token" -> config.getString("facebook.messages.token").getOrElse(""))
-        .withHeaders(CONTENT_TYPE -> ContentTypes.JSON)
-        .withRequestFilter(AhcCurlRequestLogger())
-        .withRequestFilter(AhcResponseLogger(body = true))
-        .post(response)
     }
   }
 }

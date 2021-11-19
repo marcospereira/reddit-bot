@@ -1,6 +1,0 @@
-GET     /healthcheck                        controllers.HealthController.index
-
-# Callbacks
-GET     /.well-known/acme-challenge/:key    controllers.CallbacksController.letsEncrypt(key: String)
-GET     /facebook/callback                  controllers.MessengerController.verifyApp
-POST    /facebook/callback                  controllers.MessengerController.receiveMessage
